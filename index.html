@@ -21,7 +21,7 @@
             line-height: 1.6;
         }
 
-        /* Ảnh nền phía trên */
+        /* --- Ảnh nền --- */
         .background-banner {
             height: 250px;
             background: url('ảnh.jpg') center/cover no-repeat;
@@ -32,7 +32,7 @@
             z-index: 0;
         }
 
-        /* --- Bố cục mặc định cho Điện thoại --- */
+        /* --- Bố cục chung Điện thoại --- */
         .container {
             max-width: 420px;
             margin: 120px auto 40px;
@@ -50,7 +50,7 @@
             text-align: center;
         }
 
-        /* Phần Avatar */
+        /* --- Avatar & Badges --- */
         .avatar-container {
             position: relative;
             margin-top: -80px;
@@ -89,6 +89,7 @@
             align-items: center;
             gap: 4px;
         }
+        
         .badge-fps::before {
             content: '';
             width: 8px;
@@ -113,13 +114,14 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* --- Thông tin Profile --- */
+        /* --- Thông tin cá nhân --- */
         h1.name {
             font-size: 24px;
             font-weight: 800;
             color: #2c3e50;
             margin-top: 10px;
         }
+        
         .verified { color: #1da1f2; font-size: 18px; vertical-align: middle; }
         p.alias { font-size: 14px; color: #7f8c8d; font-weight: 700; margin-bottom: 20px; }
 
@@ -129,6 +131,7 @@
             gap: 18px;
             margin-bottom: 30px;
         }
+        
         .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; }
         .social-links a:hover { transform: scale(1.1); color: #aab6fe; }
 
@@ -137,6 +140,7 @@
             border-top: 1px solid #f0f0f0;
             padding-top: 20px;
         }
+        
         .info-item { margin-bottom: 15px; }
         .info-label { font-size: 11px; font-weight: 800; color: #95a5a6; text-transform: uppercase; margin-bottom: 3px; display: block; }
         .info-value { font-size: 15px; font-weight: 700; color: #34495e; }
@@ -149,64 +153,88 @@
         }
         .about-card p { text-align: left; font-weight: 700; font-size: 14px; color: #555; margin-bottom: 25px; }
 
-        /* --- Thanh toán --- */
+        /* --- Thanh toán (Ngân hàng) --- */
         .payment-box {
-            border: 1px solid #eee; border-radius: 16px; padding: 15px; text-align: center; margin-bottom: 15px;
+            border: 1px solid #eee; 
+            border-radius: 16px; 
+            padding: 20px 15px; 
+            text-align: center; 
+            margin-bottom: 15px;
+            background-color: #fafbfc;
         }
-        .bank-logo-img { max-width: 130px; height: auto; margin-bottom: 5px; display: block; margin: 0 auto; }
+        
+        .bank-img { 
+            height: 55px; /* Giới hạn chiều cao để 2 logo bằng nhau */
+            width: auto; 
+            max-width: 100%;
+            object-fit: contain; 
+            margin: 0 auto 15px auto; 
+            display: block; 
+            border-radius: 8px; /* Bo góc nhẹ cho ảnh JPG */
+        }
+
+        .stk-highlight {
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            display: inline-block;
+            font-size: 16px;
+        }
+        .stk-mb { background-color: #e0f7fa; color: #123281; }
+        .stk-tcb { background-color: #ffebee; color: #E51124; }
 
         /* ========================================================
-           GIAO DIỆN MÁY TÍNH (Ngang như ảnh mẫu)
+           BẬT GIAO DIỆN MÁY TÍNH (Ngang 2 cột)
            ======================================================== */
         @media (min-width: 768px) {
             .container {
-                max-width: 950px; /* Bề ngang rộng rãi y hệt mẫu */
+                max-width: 950px; 
                 margin-top: 160px;
             }
             
-            /* Thẻ 1: Profile nằm ngang */
             .profile-card {
                 display: flex;
                 align-items: center;
                 text-align: left;
                 padding: 30px 40px;
             }
+            
             .avatar-container {
-                margin-top: -70px; /* Avatar nhô lên khỏi viền trắng */
+                margin-top: -70px; 
                 margin-right: 30px;
                 margin-bottom: 0;
                 flex-shrink: 0;
             }
+            
             .profile-info-center {
-                flex: 1; /* Tên và Mạng xã hội giãn ra chiếm phần giữa */
+                flex: 1; 
             }
-            .profile-info-center h1.name {
-                margin-top: 0;
-            }
-            .profile-info-center .social-links {
-                justify-content: flex-start; /* Kéo icon mạng xã hội sang trái */
-                margin-bottom: 0;
-            }
+            
+            .profile-info-center h1.name { margin-top: 0; }
+            .profile-info-center .social-links { justify-content: flex-start; margin-bottom: 0; }
+            
             .info-list {
-                border-top: none; /* Bỏ gạch ngang của điện thoại */
-                border-left: 1px solid #e2e8f0; /* Thêm vạch kẻ dọc */
+                border-top: none; 
+                border-left: 1px solid #e2e8f0; 
                 padding-top: 0;
                 padding-left: 40px;
                 margin-left: 20px;
                 min-width: 250px;
             }
 
-            /* Thẻ 2: Giới thiệu & Thanh toán */
-            .about-card {
-                padding: 40px;
-            }
+            .about-card { padding: 40px; }
+            
             .payment-grid {
                 display: flex;
                 gap: 30px;
             }
+            
             .payment-box {
-                flex: 1; /* Hai ô thanh toán dàn đều 2 bên */
+                flex: 1; 
                 margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
         }
     </style>
@@ -257,20 +285,16 @@
 
             <div class="payment-grid">
                 <div class="payment-box">
-                    <img src="mb-logo.png" alt="MB Bank Logo" class="bank-logo-img">
-                    <div style="text-align: center; margin-top: 10px;">
-                        <span style="background-color: #e0f7fa; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
-                            1408200598
-                        </span>
+                    <img src="logomb.jpg" alt="MB Bank Logo" class="bank-img">
+                    <div>
+                        <span class="stk-highlight stk-mb">1408200598</span>
                     </div>
                 </div> 
                 
                 <div class="payment-box">
-                    <img src="tcb-logo.png" alt="Techcombank Logo" class="bank-logo-img">
-                    <div style="text-align: center; margin-top: 10px;">
-                        <span style="background-color: #ffebee; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
-                            1408200550
-                        </span>
+                    <img src="logoteck.jpg" alt="Techcombank Logo" class="bank-img">
+                    <div>
+                        <span class="stk-highlight stk-tcb">1408200550</span>
                     </div>
                 </div>
             </div>
