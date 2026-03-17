@@ -32,7 +32,7 @@
             z-index: 0;
         }
 
-        /* --- Bố cục mặc định cho Điện thoại (1 cột) --- */
+        /* --- Bố cục mặc định cho Điện thoại --- */
         .container {
             max-width: 420px;
             margin: 120px auto 40px;
@@ -50,7 +50,7 @@
             text-align: center;
         }
 
-        /* --- Phần Avatar và Header --- */
+        /* Phần Avatar */
         .avatar-container {
             position: relative;
             margin-top: -80px;
@@ -59,7 +59,7 @@
         }
 
         .avatar-border {
-            background: #23cad9; /* Màu viền */
+            background: #23cad9;
             padding: 6px;
             border-radius: 40px;
             display: inline-block;
@@ -113,142 +113,99 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        /* --- Thông tin Profile --- */
         h1.name {
             font-size: 24px;
             font-weight: 800;
             color: #2c3e50;
             margin-top: 10px;
         }
-        
-        .verified {
-            color: #1da1f2;
-            font-size: 18px;
-            vertical-align: middle;
-        }
+        .verified { color: #1da1f2; font-size: 18px; vertical-align: middle; }
+        p.alias { font-size: 14px; color: #7f8c8d; font-weight: 700; margin-bottom: 20px; }
 
-        p.alias {
-            font-size: 14px;
-            color: #7f8c8d;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        /* --- Mạng xã hội --- */
         .social-links {
             display: flex;
             justify-content: center;
             gap: 18px;
             margin-bottom: 30px;
         }
+        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; }
+        .social-links a:hover { transform: scale(1.1); color: #aab6fe; }
 
-        .social-links a {
-            color: #2c3e50;
-            font-size: 22px;
-            text-decoration: none;
-            transition: transform 0.2s, color 0.2s;
-        }
-
-        .social-links a:hover {
-            transform: scale(1.1);
-            color: #aab6fe;
-        }
-
-        /* --- Thông tin cá nhân --- */
         .info-list {
             text-align: left;
             border-top: 1px solid #f0f0f0;
             padding-top: 20px;
         }
-
-        .info-item {
-            margin-bottom: 15px;
-        }
-
-        .info-label {
-            font-size: 11px;
-            font-weight: 800;
-            color: #95a5a6;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .info-value {
-            font-size: 15px;
-            font-weight: 700;
-            color: #34495e;
-        }
+        .info-item { margin-bottom: 15px; }
+        .info-label { font-size: 11px; font-weight: 800; color: #95a5a6; text-transform: uppercase; margin-bottom: 3px; display: block; }
+        .info-value { font-size: 15px; font-weight: 700; color: #34495e; }
 
         /* --- Giới thiệu --- */
-        .about-card h2 {
-            text-align: left;
-            font-size: 22px;
-            font-weight: 800;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
+        .about-card h2 { text-align: left; font-size: 22px; font-weight: 800; margin-bottom: 15px; position: relative; }
         .about-card h2::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: linear-gradient(90deg, #f39c12, #3498db);
-            border-radius: 2px;
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 40px; height: 3px;
+            background: linear-gradient(90deg, #f39c12, #3498db); border-radius: 2px;
         }
-
-        .about-card p {
-            text-align: left;
-            font-weight: 700;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 25px;
-        }
+        .about-card p { text-align: left; font-weight: 700; font-size: 14px; color: #555; margin-bottom: 25px; }
 
         /* --- Thanh toán --- */
         .payment-box {
-            border: 1px solid #eee;
-            border-radius: 16px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 15px;
-            transition: box-shadow 0.2s;
+            border: 1px solid #eee; border-radius: 16px; padding: 15px; text-align: center; margin-bottom: 15px;
         }
-        
-        .payment-box:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        /* --- MỚI: Định dạng cho logo ngân hàng --- */
-        .bank-logo-img {
-            max-width: 130px; /* Độ rộng tối đa của logo */
-            height: auto; /* Tự động điều chỉnh chiều cao */
-            margin-bottom: 5px;
-            display: block; /* Giúp căn giữa hình ảnh */
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .bank-logo-img { max-width: 130px; height: auto; margin-bottom: 5px; display: block; margin: 0 auto; }
 
         /* ========================================================
-           LỆNH BẬT GIAO DIỆN MÁY TÍNH (Màn hình từ 768px trở lên)
+           GIAO DIỆN MÁY TÍNH (Ngang như ảnh mẫu)
            ======================================================== */
         @media (min-width: 768px) {
-            .background-banner {
-                height: 320px; /* Kéo dài ảnh nền thêm một chút cho máy tính */
-            }
             .container {
-                max-width: 850px; /* Mở rộng tối đa bề ngang */
-                margin-top: 160px; /* Chỉnh lại khoảng cách để cân đối với nền */
-                display: flex; /* Bật chế độ dàn ngang (2 cột) */
-                gap: 30px; /* Khoảng cách giữa 2 thẻ card */
-                align-items: flex-start; /* Không ép 2 thẻ bị giãn bằng chiều dài nhau */
+                max-width: 950px; /* Bề ngang rộng rãi y hệt mẫu */
+                margin-top: 160px;
             }
-            .card {
-                flex: 1; /* Hai thẻ chia đôi diện tích bằng nhau (50% - 50%) */
+            
+            /* Thẻ 1: Profile nằm ngang */
+            .profile-card {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                padding: 30px 40px;
+            }
+            .avatar-container {
+                margin-top: -70px; /* Avatar nhô lên khỏi viền trắng */
+                margin-right: 30px;
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+            .profile-info-center {
+                flex: 1; /* Tên và Mạng xã hội giãn ra chiếm phần giữa */
+            }
+            .profile-info-center h1.name {
+                margin-top: 0;
+            }
+            .profile-info-center .social-links {
+                justify-content: flex-start; /* Kéo icon mạng xã hội sang trái */
+                margin-bottom: 0;
+            }
+            .info-list {
+                border-top: none; /* Bỏ gạch ngang của điện thoại */
+                border-left: 1px solid #e2e8f0; /* Thêm vạch kẻ dọc */
+                padding-top: 0;
+                padding-left: 40px;
+                margin-left: 20px;
+                min-width: 250px;
+            }
+
+            /* Thẻ 2: Giới thiệu & Thanh toán */
+            .about-card {
+                padding: 40px;
+            }
+            .payment-grid {
+                display: flex;
+                gap: 30px;
+            }
+            .payment-box {
+                flex: 1; /* Hai ô thanh toán dàn đều 2 bên */
                 margin-bottom: 0;
             }
         }
@@ -259,7 +216,7 @@
     <div class="background-banner"></div>
 
     <div class="container">
-        <div class="card">
+        <div class="card profile-card">
             <div class="avatar-container">
                 <div class="badge-fps">FPS:144</div>
                 <div class="avatar-border">
@@ -268,16 +225,18 @@
                 <div class="badge-disc"><i class="fas fa-compact-disc"></i></div>
             </div>
 
-            <h1 class="name">Trần Gia Đại <i class="fas fa-check-circle verified"></i></h1>
-            <p class="alias">Mr bịp</p>
+            <div class="profile-info-center">
+                <h1 class="name">Trần Gia Đại <i class="fas fa-check-circle verified"></i></h1>
+                <p class="alias">Mr bịp</p>
 
-            <div class="social-links">
-                <a href="https://www.facebook.com/iamgiadai" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://zalo.me/0942129369" title="Zalo"><i class="fas fa-comment-dots"></i></a>
-                <a href="https://www.tiktok.com/@iamgiadai" title="TikTok"><i class="fab fa-tiktok"></i></a>
-                <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                <a href="#" title="Heart"><i class="fas fa-heart"></i></a>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/iamgiadai" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://zalo.me/0942129369" title="Zalo"><i class="fas fa-comment-dots"></i></a>
+                    <a href="https://www.tiktok.com/@iamgiadai" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="#" title="Heart"><i class="fas fa-heart"></i></a>
+                </div>
             </div>
 
             <div class="info-list">
@@ -296,21 +255,23 @@
             <h2>Giới thiệu</h2>
             <p>Xã Yên Đồng - Tỉnh Ninh Bình</p>
 
-            <div class="payment-box">
-                <img src="logomb.jgp" alt="MB Bank Logo" class="bank-logo-img">
-                <div style="text-align: center; margin-top: 10px;">
-                    <span style="background-color: #e0f7fa; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
-                        1408200598
-                    </span>
-                </div>
-            </div> 
-            
-            <div class="payment-box">
-                <img src="tcb-logo.png" alt="Techcombank Logo" class="bank-logo-img">
-                <div style="text-align: center; margin-top: 10px;">
-                    <span style="background-color: #ffebee; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
-                        1408200550
-                    </span>
+            <div class="payment-grid">
+                <div class="payment-box">
+                    <img src="mb-logo.png" alt="MB Bank Logo" class="bank-logo-img">
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span style="background-color: #e0f7fa; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
+                            1408200598
+                        </span>
+                    </div>
+                </div> 
+                
+                <div class="payment-box">
+                    <img src="tcb-logo.png" alt="Techcombank Logo" class="bank-logo-img">
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span style="background-color: #ffebee; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
+                            1408200550
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -321,7 +282,6 @@
     </audio>
 
     <script>
-        // Lệnh phát nhạc khi người dùng click hoặc chạm vào màn hình
         document.body.addEventListener('click', function() {
             var audio = document.getElementById('bg-music');
             if (audio.paused) { audio.play(); }
