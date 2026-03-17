@@ -32,6 +32,7 @@
             z-index: 0;
         }
 
+        /* --- Bố cục mặc định cho Điện thoại (1 cột) --- */
         .container {
             max-width: 420px;
             margin: 120px auto 40px;
@@ -58,7 +59,7 @@
         }
 
         .avatar-border {
-            background: #23cad9; /* Màu viền tím nhạt giống hình */
+            background: #23cad9; /* Màu viền */
             padding: 6px;
             border-radius: 40px;
             display: inline-block;
@@ -222,15 +223,35 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .bank-logo {
-            font-size: 20px;
-            font-weight: 800;
+        /* --- MỚI: Định dạng cho logo ngân hàng --- */
+        .bank-logo-img {
+            max-width: 130px; /* Độ rộng tối đa của logo */
+            height: auto; /* Tự động điều chỉnh chiều cao */
             margin-bottom: 5px;
+            display: block; /* Giúp căn giữa hình ảnh */
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        .mb-color { color: #1f3bb3; }
-        .tcb-color { color: #e60000; }
 
+        /* ========================================================
+           LỆNH BẬT GIAO DIỆN MÁY TÍNH (Màn hình từ 768px trở lên)
+           ======================================================== */
+        @media (min-width: 768px) {
+            .background-banner {
+                height: 320px; /* Kéo dài ảnh nền thêm một chút cho máy tính */
+            }
+            .container {
+                max-width: 850px; /* Mở rộng tối đa bề ngang */
+                margin-top: 160px; /* Chỉnh lại khoảng cách để cân đối với nền */
+                display: flex; /* Bật chế độ dàn ngang (2 cột) */
+                gap: 30px; /* Khoảng cách giữa 2 thẻ card */
+                align-items: flex-start; /* Không ép 2 thẻ bị giãn bằng chiều dài nhau */
+            }
+            .card {
+                flex: 1; /* Hai thẻ chia đôi diện tích bằng nhau (50% - 50%) */
+                margin-bottom: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -276,24 +297,26 @@
             <p>Xã Yên Đồng - Tỉnh Ninh Bình</p>
 
             <div class="payment-box">
-                <div class="bank-logo mb-color">MB BANK</div>
+                <img src="logomb.png" alt="MB Bank Logo" class="bank-logo-img">
                 <div style="text-align: center; margin-top: 10px;">
                     <span style="background-color: #e0f7fa; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
                         1408200598
                     </span>
                 </div>
-            </div> <div class="payment-box">
-                <div class="bank-logo tcb-color">TECHCOMBANK</div>
+            </div> 
+            
+            <div class="payment-box">
+                <img src="tcb-logo.png" alt="Techcombank Logo" class="bank-logo-img">
                 <div style="text-align: center; margin-top: 10px;">
                     <span style="background-color: #ffebee; color: #333; padding: 8px 16px; border-radius: 8px; font-weight: bold; display: inline-block;">
                         1408200550
                     </span>
                 </div>
             </div>
-
         </div>
     </div>
-<audio id="bg-music" loop>
+
+    <audio id="bg-music" loop>
         <source src="ganhme.mp3" type="audio/mpeg">
     </audio>
 
