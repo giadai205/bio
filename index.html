@@ -19,10 +19,9 @@
             background-color: #f4f6f9;
             color: #333;
             line-height: 1.6;
-            overflow-x: hidden; /* Chống cuộn ngang do tên lửa */
+            overflow-x: hidden; 
         }
 
-        /* --- Ảnh nền --- */
         .background-banner {
             height: 250px;
             background: url('ảnh.jpg') center/cover no-repeat;
@@ -33,7 +32,6 @@
             z-index: 0;
         }
 
-        /* --- Bố cục chung Điện thoại --- */
         .container {
             max-width: 420px;
             margin: 120px auto 40px;
@@ -51,7 +49,6 @@
             text-align: center;
         }
 
-        /* --- Avatar & Badges --- */
         .avatar-container {
             position: relative;
             margin-top: -80px;
@@ -115,7 +112,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* --- Thông tin cá nhân --- */
         h1.name {
             font-size: 24px;
             font-weight: 800;
@@ -146,7 +142,6 @@
         .info-label { font-size: 11px; font-weight: 800; color: #95a5a6; text-transform: uppercase; margin-bottom: 3px; display: block; }
         .info-value { font-size: 15px; font-weight: 700; color: #34495e; display: flex; align-items: center; }
 
-        /* --- Nút bật tắt số điện thoại --- */
         #toggle-phone {
             margin-left: 10px;
             color: #95a5a6;
@@ -160,7 +155,6 @@
             transform: scale(1.1);
         }
 
-        /* --- Giới thiệu --- */
         .about-card h2 { text-align: left; font-size: 22px; font-weight: 800; margin-bottom: 15px; position: relative; }
         .about-card h2::after {
             content: ''; position: absolute; bottom: -5px; left: 0; width: 40px; height: 3px;
@@ -168,7 +162,6 @@
         }
         .about-card p { text-align: left; font-weight: 700; font-size: 14px; color: #555; margin-bottom: 25px; }
 
-        /* --- Thanh toán (Ngân hàng) --- */
         .payment-box {
             border: 1px solid #eee; 
             border-radius: 16px; 
@@ -205,11 +198,10 @@
         .stk-mb { background-color: #e0f7fa; color: #123281; }
         .stk-tcb { background-color: #ffebee; color: #E51124; }
 
-        /* --- Modal QR Code --- */
         .modal {
             display: none; 
             position: fixed;
-            z-index: 10000; /* Modal nằm trên cùng */
+            z-index: 10000; 
             left: 0;
             top: 0;
             width: 100%;
@@ -243,9 +235,7 @@
             transition: 0.2s;
         }
 
-        .close-btn:hover {
-            color: #e74c3c; 
-        }
+        .close-btn:hover { color: #e74c3c; }
 
         .modal-h3 {
             margin-bottom: 15px;
@@ -262,24 +252,26 @@
             margin: 0 auto;
         }
 
-        /* --- MƯA TÊN LỬA --- */
+        /* --- MƯA TÊN LỬA CÓ NỔ --- */
         .rocket {
             position: fixed;
-            top: -50px; /* ĐÃ SỬA: Bắt buộc phải có cái này để xuất phát từ trên cùng */
+            top: -50px; 
             z-index: 9999;
             font-size: 24px;
             color: #e74c3c;
             animation: rocketFall linear forwards;
             pointer-events: none; 
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5); /* Thêm viền sáng cho đẹp */
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
+        /* Cập nhật: Rơi đến 95vh (sát đáy màn hình) thì dừng lại chuẩn bị nổ */
         @keyframes rocketFall {
             0% { transform: translateY(0) rotate(180deg); opacity: 0; }
             10% { opacity: 1; }
-            100% { transform: translateY(110vh) rotate(180deg); opacity: 0.5; }
+            100% { transform: translateY(95vh) rotate(180deg); opacity: 1; }
         }
 
         @media (min-width: 768px) {
@@ -385,7 +377,7 @@
             if (audio.paused) { audio.play(); }
         });
 
-        // 2. Mã FPS trực tiếp
+        // 2. Mã FPS
         const fpsElement = document.getElementById('live-fps');
         let frameCount = 0;
         let lastTime = performance.now();
@@ -393,7 +385,6 @@
         function updateFPS() {
             const currentTime = performance.now();
             frameCount++;
-            
             if (currentTime - lastTime >= 1000) {
                 if(fpsElement) { fpsElement.innerHTML = "FPS:" + frameCount; }
                 frameCount = 0;
@@ -403,7 +394,7 @@
         }
         updateFPS();
 
-        // 3. Chức năng Hiện/Ẩn số điện thoại
+        // 3. Hiện/Ẩn SĐT
         const phoneSpan = document.getElementById("phone-numbers");
         const toggleIcon = document.getElementById("toggle-phone");
         const realPhones = "0942129369 | 0364140825";
@@ -424,7 +415,7 @@
             }
         }
 
-        // 4. Chức năng Modal QR Code
+        // 4. Modal QR
         const modal = document.getElementById("qrModal");
         const qrImage = document.getElementById("qrImage");
         const modalTitle = document.getElementById("modalTitle");
@@ -444,21 +435,35 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. Chức năng tạo hiệu ứng mưa tên lửa
+        // 5. CẬP NHẬT: Tạo tên lửa có hiệu ứng nổ
         function createRocket() {
             const rocket = document.createElement('div');
             rocket.classList.add('rocket');
             rocket.innerHTML = '<i class="fas fa-rocket"></i>';
-            rocket.style.left = Math.random() * 100 + 'vw';
-            rocket.style.animationDuration = Math.random() * 2 + 3 + 's';
+            rocket.style.left = Math.random() * 95 + 'vw'; // Random vị trí ngang
+            
+            // Random tốc độ rơi từ 1.5s đến 3.5s
+            const fallDuration = Math.random() * 2 + 1.5; 
+            rocket.style.animationDuration = fallDuration + 's';
             document.body.appendChild(rocket);
             
+            // Xử lý hiệu ứng nổ (can thiệp ngay trước khi rơi xong)
+            setTimeout(() => {
+                rocket.style.animation = 'none'; // Đứng im
+                rocket.innerHTML = '💥'; // Thay bằng icon nổ
+                rocket.style.transform = 'rotate(0deg) scale(2.5)'; // To ra
+                rocket.style.opacity = '0'; // Mờ dần
+                rocket.style.transition = 'all 0.4s ease-out'; // Mượt mà
+            }, fallDuration * 1000 - 50); 
+            
+            // Xóa phần tử để không làm nặng web
             setTimeout(() => {
                 rocket.remove();
-            }, 5000); 
+            }, fallDuration * 1000 + 400); 
         }
 
-        setInterval(createRocket, 300); 
+        // Cứ 400ms bắn một quả
+        setInterval(createRocket, 400); 
     </script>
 </body>
 </html>
