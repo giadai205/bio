@@ -132,7 +132,7 @@
             margin-bottom: 30px;
         }
         
-        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; }
+        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; cursor: pointer; }
         .social-links a:hover { transform: scale(1.1); color: #aab6fe; }
 
         .info-list {
@@ -145,17 +145,17 @@
         .info-label { font-size: 11px; font-weight: 800; color: #95a5a6; text-transform: uppercase; margin-bottom: 3px; display: block; }
         .info-value { font-size: 15px; font-weight: 700; color: #34495e; display: flex; align-items: center; }
 
-        /* --- Nút bật tắt số điện thoại (MỚI THÊM) --- */
+        /* --- Nút bật tắt số điện thoại --- */
         #toggle-phone {
             margin-left: 10px;
             color: #95a5a6;
             cursor: pointer;
             transition: color 0.2s, transform 0.2s;
-            font-size: 16px; /* Chỉnh kích thước icon con mắt */
+            font-size: 16px; 
         }
         
         #toggle-phone:hover {
-            color: #3498db; /* Đổi màu xanh khi di chuột vào */
+            color: #3498db; 
             transform: scale(1.1);
         }
 
@@ -175,24 +175,23 @@
             text-align: center; 
             margin-bottom: 15px;
             background-color: #FFFFFF;
-            cursor: pointer; /* Thay đổi con trỏ chuột khi di chuột vào (MỚI THÊM) */
-            transition: transform 0.2s, box-shadow 0.2s; /* Hiệu ứng chuyển động (MỚI THÊM) */
+            cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; 
         }
 
-        /* Hiệu ứng hover cho payment-box (MỚI THÊM) */
         .payment-box:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
         
         .bank-img { 
-            height: 55px; /* Giới hạn chiều cao để 2 logo bằng nhau */
+            height: 55px; 
             width: auto; 
             max-width: 100%;
             object-fit: contain; 
             margin: 0 auto 15px auto; 
             display: block; 
-            border-radius: 8px; /* Bo góc nhẹ cho ảnh JPG */
+            border-radius: 8px; 
         }
 
         .stk-highlight {
@@ -205,16 +204,16 @@
         .stk-mb { background-color: #e0f7fa; color: #123281; }
         .stk-tcb { background-color: #ffebee; color: #E51124; }
 
-        /* --- Modal QR Code (MỚI THÊM) --- */
+        /* --- Modal QR Code --- */
         .modal {
-            display: none; /* Ẩn mặc định */
+            display: none; 
             position: fixed;
-            z-index: 9999; /* Đảm bảo modal ở trên cùng */
+            z-index: 9999; 
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Nền mờ tối */
+            background-color: rgba(0, 0, 0, 0.6); 
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s ease;
@@ -226,7 +225,7 @@
             border-radius: 24px;
             text-align: center;
             position: relative;
-            max-width: 320px; /* Độ rộng tối đa của modal */
+            max-width: 320px; 
             width: 90%;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             animation: slideUp 0.3s ease;
@@ -244,7 +243,7 @@
         }
 
         .close-btn:hover {
-            color: #e74c3c; /* Đổi màu đỏ khi di chuột vào */
+            color: #e74c3c; 
         }
 
         .modal-h3 {
@@ -254,7 +253,7 @@
         }
 
         .qr-img-modal {
-            width: 100%; /* Chiếm toàn bộ độ rộng modal */
+            width: 100%; 
             height: auto;
             border-radius: 16px;
             border: 1px solid #eee;
@@ -346,7 +345,7 @@
                     <a href="https://zalo.me/0942129369" title="Zalo"><i class="fas fa-comment-dots"></i></a>
                     <a href="https://www.tiktok.com/@iamgiadai" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="#" title="Heart"><i class="fas fa-heart"></i></a>
+                    <a onclick="showQR('wechat.jpg', 'Quét mã WeChat')" title="WeChat"><i class="fab fa-weixin"></i></a>
                 </div>
             </div>
 
@@ -370,14 +369,14 @@
             <p>Xã Yên Đồng - Tỉnh Ninh Bình</p>
 
             <div class="payment-grid">
-                <div class="payment-box" onclick="showQR('qrmb.jpg')">
+                <div class="payment-box" onclick="showQR('qrmb.jpg', 'Quét mã để chuyển')">
                     <img src="logomb.jpg" alt="MB Bank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-mb">1408200598</span>
                     </div>
                 </div> 
                 
-                <div class="payment-box" onclick="showQR('qrteck.jpg')">
+                <div class="payment-box" onclick="showQR('qrteck.jpg', 'Quét mã để chuyển')">
                     <img src="logoteck.jpg" alt="Techcombank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-tcb">1408200550</span>
@@ -390,7 +389,7 @@
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 class="modal-h3">Quét mã để chuyển</h3>
+            <h3 class="modal-h3" id="modalTitle">Quét mã để chuyển</h3>
             <img id="qrImage" src="" alt="QR Code" class="qr-img-modal">
         </div>
     </div>
@@ -431,7 +430,7 @@
         }
         updateFPS();
 
-        // 3. Chức năng Hiện/Ẩn số điện thoại (MỚI THÊM)
+        // 3. Chức năng Hiện/Ẩn số điện thoại
         const phoneSpan = document.getElementById("phone-numbers");
         const toggleIcon = document.getElementById("toggle-phone");
         
@@ -456,13 +455,15 @@
             }
         }
 
-        // 4. Chức năng Modal QR Code (MỚI THÊM)
+        // 4. Chức năng Modal QR Code
         const modal = document.getElementById("qrModal");
         const qrImage = document.getElementById("qrImage");
+        const modalTitle = document.getElementById("modalTitle");
 
-        // Hàm mở Modal và đổi ảnh QR
-        function showQR(imageSrc) {
+        // Hàm mở Modal và đổi ảnh QR, tiêu đề
+        function showQR(imageSrc, titleText) {
             qrImage.src = imageSrc; // Đổi nguồn ảnh thành ảnh tương ứng
+            modalTitle.textContent = titleText; // Đổi tiêu đề cho phù hợp
             modal.style.display = "flex"; // Hiển thị modal (sử dụng flex để căn giữa)
         }
 
