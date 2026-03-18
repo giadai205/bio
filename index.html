@@ -19,8 +19,7 @@
             background-color: #f4f6f9;
             color: #333;
             line-height: 1.6;
-            /* Thêm overflow-x hidden để tránh cuộn ngang do tên lửa */
-            overflow-x: hidden; 
+            overflow-x: hidden; /* Chống cuộn ngang do tên lửa */
         }
 
         /* --- Ảnh nền --- */
@@ -134,7 +133,7 @@
             margin-bottom: 30px;
         }
         
-        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; }
+        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; cursor: pointer; }
         .social-links a:hover { transform: scale(1.1); color: #aab6fe; }
 
         .info-list {
@@ -210,7 +209,7 @@
         .modal {
             display: none; 
             position: fixed;
-            z-index: 9999; 
+            z-index: 10000; /* Modal nằm trên cùng */
             left: 0;
             top: 0;
             width: 100%;
@@ -263,80 +262,36 @@
             margin: 0 auto;
         }
 
-        /* MỚI: Style cho hiệu ứng tên lửa */
+        /* --- MƯA TÊN LỬA --- */
         .rocket {
             position: fixed;
-            z-index: 2; /* Phía trên container */
+            z-index: 9999; /* Z-index siêu cao để đè lên mọi thứ */
             font-size: 24px;
-            color: red; /* Hoặc đổi màu tùy ý */
+            color: #e74c3c; /* Màu đỏ */
             animation: rocketFall linear forwards;
-            pointer-events: none; /* Không cản trở tương tác */
+            pointer-events: none; /* Không cản trở khi bấm vào link */
         }
 
-        /* Hoạt ảnh cho modal và tên lửa */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* MỚI: Hoạt ảnh tên lửa rơi */
         @keyframes rocketFall {
             0% { transform: translateY(-10vh) rotate(180deg); opacity: 0; }
             10% { opacity: 1; }
             100% { transform: translateY(110vh) rotate(180deg); opacity: 0.5; }
         }
 
-        /* ========================================================
-           BẬT GIAO DIỆN MÁY TÍNH (Ngang 2 cột)
-           ======================================================== */
         @media (min-width: 768px) {
-            .container {
-                max-width: 950px; 
-                margin-top: 160px;
-            }
-            
-            .profile-card {
-                display: flex;
-                align-items: center;
-                text-align: left;
-                padding: 30px 40px;
-            }
-            
-            .avatar-container {
-                margin-top: -70px; 
-                margin-right: 30px;
-                margin-bottom: 0;
-                flex-shrink: 0;
-            }
-            
-            .profile-info-center {
-                flex: 1; 
-            }
-            
+            .container { max-width: 950px; margin-top: 160px; }
+            .profile-card { display: flex; align-items: center; text-align: left; padding: 30px 40px; }
+            .avatar-container { margin-top: -70px; margin-right: 30px; margin-bottom: 0; flex-shrink: 0; }
+            .profile-info-center { flex: 1; }
             .profile-info-center h1.name { margin-top: 0; }
             .profile-info-center .social-links { justify-content: flex-start; margin-bottom: 0; }
-            
-            .info-list {
-                border-top: none; 
-                border-left: 1px solid #e2e8f0; 
-                padding-top: 0;
-                padding-left: 40px;
-                margin-left: 20px;
-                min-width: 250px;
-            }
-
+            .info-list { border-top: none; border-left: 1px solid #e2e8f0; padding-top: 0; padding-left: 40px; margin-left: 20px; min-width: 250px; }
             .about-card { padding: 40px; }
-            
-            .payment-grid {
-                display: flex;
-                gap: 30px;
-            }
-            
-            .payment-box {
-                flex: 1; 
-                margin-bottom: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
+            .payment-grid { display: flex; gap: 30px; }
+            .payment-box { flex: 1; margin-bottom: 0; display: flex; flex-direction: column; justify-content: center; }
         }
     </style>
 </head>
@@ -364,7 +319,7 @@
                     <a href="https://zalo.me/0942129369" title="Zalo"><i class="fas fa-comment-dots"></i></a>
                     <a href="https://www.tiktok.com/@iamgiadai" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="#" title="Heart"><i class="fas fa-heart"></i></a>
+                    <a onclick="showQR('wechat.jpg', 'Quét mã WeChat')" title="WeChat"><i class="fab fa-weixin"></i></a>
                 </div>
             </div>
 
@@ -388,14 +343,14 @@
             <p>Xã Yên Đồng - Tỉnh Ninh Bình</p>
 
             <div class="payment-grid">
-                <div class="payment-box" onclick="showQR('qrmb.jpg')">
+                <div class="payment-box" onclick="showQR('qrmb.jpg', 'Quét mã để chuyển')">
                     <img src="logomb.jpg" alt="MB Bank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-mb">1408200598</span>
                     </div>
                 </div> 
                 
-                <div class="payment-box" onclick="showQR('qrteck.jpg')">
+                <div class="payment-box" onclick="showQR('qrteck.jpg', 'Quét mã để chuyển')">
                     <img src="logoteck.jpg" alt="Techcombank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-tcb">1408200550</span>
@@ -408,7 +363,7 @@
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 class="modal-h3">Quét mã để chuyển</h3>
+            <h3 class="modal-h3" id="modalTitle">Quét mã để chuyển</h3>
             <img id="qrImage" src="" alt="QR Code" class="qr-img-modal">
         </div>
     </div>
@@ -439,9 +394,7 @@
             frameCount++;
             
             if (currentTime - lastTime >= 1000) {
-                if(fpsElement) {
-                    fpsElement.innerHTML = "FPS:" + frameCount;
-                }
+                if(fpsElement) { fpsElement.innerHTML = "FPS:" + frameCount; }
                 frameCount = 0;
                 lastTime = currentTime;
             }
@@ -452,7 +405,6 @@
         // 3. Chức năng Hiện/Ẩn số điện thoại
         const phoneSpan = document.getElementById("phone-numbers");
         const toggleIcon = document.getElementById("toggle-phone");
-        
         const realPhones = "0942129369 | 0364140825";
         const hiddenPhones = "0942***369 | 0364***825";
         let isPhoneHidden = true;
@@ -474,9 +426,11 @@
         // 4. Chức năng Modal QR Code
         const modal = document.getElementById("qrModal");
         const qrImage = document.getElementById("qrImage");
+        const modalTitle = document.getElementById("modalTitle");
 
-        function showQR(imageSrc) {
+        function showQR(imageSrc, titleText) {
             qrImage.src = imageSrc; 
+            modalTitle.textContent = titleText; 
             modal.style.display = "flex"; 
         }
 
@@ -486,37 +440,24 @@
         }
 
         window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
+            if (event.target == modal) { closeModal(); }
         }
 
-        // MỚI: Chức năng tạo hiệu ứng mưa tên lửa
+        // 5. Chức năng tạo hiệu ứng mưa tên lửa
         function createRocket() {
             const rocket = document.createElement('div');
             rocket.classList.add('rocket');
-            
-            // Icon tên lửa FontAwesome
             rocket.innerHTML = '<i class="fas fa-rocket"></i>';
-            
-            // Vị trí ngang ngẫu nhiên
             rocket.style.left = Math.random() * 100 + 'vw';
-            
-            // Thời gian rơi ngẫu nhiên (để tạo cảm giác lộn xộn hơn)
             rocket.style.animationDuration = Math.random() * 2 + 3 + 's';
-            
             document.body.appendChild(rocket);
             
-            // Tự động xóa tên lửa sau khi rơi xong để tránh quá nhiều phần tử
             setTimeout(() => {
                 rocket.remove();
-            }, 5000); // 5000ms = 5s (thời gian tối đa tên lửa rơi)
+            }, 5000); 
         }
 
-        // Bắt đầu hiệu ứng mưa tên lửa
-        // Cứ mỗi 300ms tạo một tên lửa mới (độ dày của mưa)
         setInterval(createRocket, 300); 
-
     </script>
 </body>
 </html>
