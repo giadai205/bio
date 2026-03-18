@@ -19,6 +19,8 @@
             background-color: #f4f6f9;
             color: #333;
             line-height: 1.6;
+            /* Thêm overflow-x hidden để tránh cuộn ngang do tên lửa */
+            overflow-x: hidden; 
         }
 
         /* --- Ảnh nền --- */
@@ -132,7 +134,7 @@
             margin-bottom: 30px;
         }
         
-        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; cursor: pointer; }
+        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; }
         .social-links a:hover { transform: scale(1.1); color: #aab6fe; }
 
         .info-list {
@@ -261,9 +263,26 @@
             margin: 0 auto;
         }
 
-        /* Hoạt ảnh cho modal */
+        /* MỚI: Style cho hiệu ứng tên lửa */
+        .rocket {
+            position: fixed;
+            z-index: 2; /* Phía trên container */
+            font-size: 24px;
+            color: red; /* Hoặc đổi màu tùy ý */
+            animation: rocketFall linear forwards;
+            pointer-events: none; /* Không cản trở tương tác */
+        }
+
+        /* Hoạt ảnh cho modal và tên lửa */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        /* MỚI: Hoạt ảnh tên lửa rơi */
+        @keyframes rocketFall {
+            0% { transform: translateY(-10vh) rotate(180deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(180deg); opacity: 0.5; }
+        }
 
         /* ========================================================
            BẬT GIAO DIỆN MÁY TÍNH (Ngang 2 cột)
@@ -345,7 +364,7 @@
                     <a href="https://zalo.me/0942129369" title="Zalo"><i class="fas fa-comment-dots"></i></a>
                     <a href="https://www.tiktok.com/@iamgiadai" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a onclick="showQR('wechat.jpg', 'Quét mã WeChat')" title="WeChat"><i class="fab fa-weixin"></i></a>
+                    <a href="#" title="Heart"><i class="fas fa-heart"></i></a>
                 </div>
             </div>
 
@@ -369,14 +388,14 @@
             <p>Xã Yên Đồng - Tỉnh Ninh Bình</p>
 
             <div class="payment-grid">
-                <div class="payment-box" onclick="showQR('qrmb.jpg', 'Quét mã để chuyển')">
+                <div class="payment-box" onclick="showQR('qrmb.jpg')">
                     <img src="logomb.jpg" alt="MB Bank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-mb">1408200598</span>
                     </div>
                 </div> 
                 
-                <div class="payment-box" onclick="showQR('qrteck.jpg', 'Quét mã để chuyển')">
+                <div class="payment-box" onclick="showQR('qrteck.jpg')">
                     <img src="logoteck.jpg" alt="Techcombank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-tcb">1408200550</span>
@@ -389,7 +408,7 @@
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 class="modal-h3" id="modalTitle">Quét mã để chuyển</h3>
+            <h3 class="modal-h3">Quét mã để chuyển</h3>
             <img id="qrImage" src="" alt="QR Code" class="qr-img-modal">
         </div>
     </div>
@@ -434,20 +453,17 @@
         const phoneSpan = document.getElementById("phone-numbers");
         const toggleIcon = document.getElementById("toggle-phone");
         
-        // Lưu sẵn 2 trạng thái: thật và ẩn
         const realPhones = "0942129369 | 0364140825";
         const hiddenPhones = "0942***369 | 0364***825";
-        let isPhoneHidden = true; // Mặc định là đang ẩn một phần số
+        let isPhoneHidden = true;
 
         function togglePhone() {
             if (isPhoneHidden) {
-                // Nếu đang ẩn thì hiện lên và đổi icon thành mắt gạch chéo
                 phoneSpan.textContent = realPhones;
                 toggleIcon.classList.remove("fa-eye");
                 toggleIcon.classList.add("fa-eye-slash");
                 isPhoneHidden = false;
             } else {
-                // Nếu đang hiện thì ẩn đi và đổi icon lại thành mắt bình thường
                 phoneSpan.textContent = hiddenPhones;
                 toggleIcon.classList.remove("fa-eye-slash");
                 toggleIcon.classList.add("fa-eye");
@@ -458,27 +474,49 @@
         // 4. Chức năng Modal QR Code
         const modal = document.getElementById("qrModal");
         const qrImage = document.getElementById("qrImage");
-        const modalTitle = document.getElementById("modalTitle");
 
-        // Hàm mở Modal và đổi ảnh QR, tiêu đề
-        function showQR(imageSrc, titleText) {
-            qrImage.src = imageSrc; // Đổi nguồn ảnh thành ảnh tương ứng
-            modalTitle.textContent = titleText; // Đổi tiêu đề cho phù hợp
-            modal.style.display = "flex"; // Hiển thị modal (sử dụng flex để căn giữa)
+        function showQR(imageSrc) {
+            qrImage.src = imageSrc; 
+            modal.style.display = "flex"; 
         }
 
-        // Hàm đóng Modal
         function closeModal() {
-            modal.style.display = "none"; // Ẩn modal
-            qrImage.src = ""; // Xóa ảnh để đảm bảo load mượt hơn cho lần sau
+            modal.style.display = "none"; 
+            qrImage.src = ""; 
         }
 
-        // Đóng modal khi click ra ngoài vùng ảnh trắng
         window.onclick = function(event) {
             if (event.target == modal) {
                 closeModal();
             }
         }
+
+        // MỚI: Chức năng tạo hiệu ứng mưa tên lửa
+        function createRocket() {
+            const rocket = document.createElement('div');
+            rocket.classList.add('rocket');
+            
+            // Icon tên lửa FontAwesome
+            rocket.innerHTML = '<i class="fas fa-rocket"></i>';
+            
+            // Vị trí ngang ngẫu nhiên
+            rocket.style.left = Math.random() * 100 + 'vw';
+            
+            // Thời gian rơi ngẫu nhiên (để tạo cảm giác lộn xộn hơn)
+            rocket.style.animationDuration = Math.random() * 2 + 3 + 's';
+            
+            document.body.appendChild(rocket);
+            
+            // Tự động xóa tên lửa sau khi rơi xong để tránh quá nhiều phần tử
+            setTimeout(() => {
+                rocket.remove();
+            }, 5000); // 5000ms = 5s (thời gian tối đa tên lửa rơi)
+        }
+
+        // Bắt đầu hiệu ứng mưa tên lửa
+        // Cứ mỗi 300ms tạo một tên lửa mới (độ dày của mưa)
+        setInterval(createRocket, 300); 
+
     </script>
 </body>
 </html>
