@@ -143,7 +143,21 @@
         
         .info-item { margin-bottom: 15px; }
         .info-label { font-size: 11px; font-weight: 800; color: #95a5a6; text-transform: uppercase; margin-bottom: 3px; display: block; }
-        .info-value { font-size: 15px; font-weight: 700; color: #34495e; }
+        .info-value { font-size: 15px; font-weight: 700; color: #34495e; display: flex; align-items: center; }
+
+        /* --- Nút bật tắt số điện thoại (MỚI THÊM) --- */
+        #toggle-phone {
+            margin-left: 10px;
+            color: #95a5a6;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+            font-size: 16px; /* Chỉnh kích thước icon con mắt */
+        }
+        
+        #toggle-phone:hover {
+            color: #3498db; /* Đổi màu xanh khi di chuột vào */
+            transform: scale(1.1);
+        }
 
         /* --- Giới thiệu --- */
         .about-card h2 { text-align: left; font-size: 22px; font-weight: 800; margin-bottom: 15px; position: relative; }
@@ -161,6 +175,14 @@
             text-align: center; 
             margin-bottom: 15px;
             background-color: #FFFFFF;
+            cursor: pointer; /* Thay đổi con trỏ chuột khi di chuột vào (MỚI THÊM) */
+            transition: transform 0.2s, box-shadow 0.2s; /* Hiệu ứng chuyển động (MỚI THÊM) */
+        }
+
+        /* Hiệu ứng hover cho payment-box (MỚI THÊM) */
+        .payment-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
         
         .bank-img { 
@@ -182,6 +204,67 @@
         }
         .stk-mb { background-color: #e0f7fa; color: #123281; }
         .stk-tcb { background-color: #ffebee; color: #E51124; }
+
+        /* --- Modal QR Code (MỚI THÊM) --- */
+        .modal {
+            display: none; /* Ẩn mặc định */
+            position: fixed;
+            z-index: 9999; /* Đảm bảo modal ở trên cùng */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Nền mờ tối */
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 24px;
+            text-align: center;
+            position: relative;
+            max-width: 320px; /* Độ rộng tối đa của modal */
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #bdc3c7;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #e74c3c; /* Đổi màu đỏ khi di chuột vào */
+        }
+
+        .modal-h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 800;
+        }
+
+        .qr-img-modal {
+            width: 100%; /* Chiếm toàn bộ độ rộng modal */
+            height: auto;
+            border-radius: 16px;
+            border: 1px solid #eee;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Hoạt ảnh cho modal */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* ========================================================
            BẬT GIAO DIỆN MÁY TÍNH (Ngang 2 cột)
@@ -274,7 +357,10 @@
                 </div>
                 <div class="info-item">
                     <span class="info-label">CALL ME</span>
-                    <span class="info-value">0942129369 | 0364140825</span>
+                    <span class="info-value">
+                        <span id="phone-numbers">0942***369 | 0364***825</span>
+                        <i class="fas fa-eye" id="toggle-phone" onclick="togglePhone()" title="Hiện/Ẩn số điện thoại"></i>
+                    </span>
                 </div>
             </div>
         </div>
@@ -284,20 +370,28 @@
             <p>Xã Yên Đồng - Tỉnh Ninh Bình</p>
 
             <div class="payment-grid">
-                <div class="payment-box">
+                <div class="payment-box" onclick="showQR('qrmb.jpg')">
                     <img src="logomb.jpg" alt="MB Bank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-mb">1408200598</span>
                     </div>
                 </div> 
                 
-                <div class="payment-box">
+                <div class="payment-box" onclick="showQR('qrteck.jpg')">
                     <img src="logoteck.jpg" alt="Techcombank Logo" class="bank-img">
                     <div>
                         <span class="stk-highlight stk-tcb">1408200550</span>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 class="modal-h3">Quét mã để chuyển</h3>
+            <img id="qrImage" src="" alt="QR Code" class="qr-img-modal">
         </div>
     </div>
 
@@ -336,6 +430,54 @@
             requestAnimationFrame(updateFPS);
         }
         updateFPS();
+
+        // 3. Chức năng Hiện/Ẩn số điện thoại (MỚI THÊM)
+        const phoneSpan = document.getElementById("phone-numbers");
+        const toggleIcon = document.getElementById("toggle-phone");
+        
+        // Lưu sẵn 2 trạng thái: thật và ẩn
+        const realPhones = "0942129369 | 0364140825";
+        const hiddenPhones = "0942***369 | 0364***825";
+        let isPhoneHidden = true; // Mặc định là đang ẩn một phần số
+
+        function togglePhone() {
+            if (isPhoneHidden) {
+                // Nếu đang ẩn thì hiện lên và đổi icon thành mắt gạch chéo
+                phoneSpan.textContent = realPhones;
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+                isPhoneHidden = false;
+            } else {
+                // Nếu đang hiện thì ẩn đi và đổi icon lại thành mắt bình thường
+                phoneSpan.textContent = hiddenPhones;
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+                isPhoneHidden = true;
+            }
+        }
+
+        // 4. Chức năng Modal QR Code (MỚI THÊM)
+        const modal = document.getElementById("qrModal");
+        const qrImage = document.getElementById("qrImage");
+
+        // Hàm mở Modal và đổi ảnh QR
+        function showQR(imageSrc) {
+            qrImage.src = imageSrc; // Đổi nguồn ảnh thành ảnh tương ứng
+            modal.style.display = "flex"; // Hiển thị modal (sử dụng flex để căn giữa)
+        }
+
+        // Hàm đóng Modal
+        function closeModal() {
+            modal.style.display = "none"; // Ẩn modal
+            qrImage.src = ""; // Xóa ảnh để đảm bảo load mượt hơn cho lần sau
+        }
+
+        // Đóng modal khi click ra ngoài vùng ảnh trắng
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>
