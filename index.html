@@ -252,26 +252,42 @@
             margin: 0 auto;
         }
 
-        /* --- MƯA TÊN LỬA CÓ NỔ --- */
-        .rocket {
+        /* --- HỆ THỐNG TÊN LỬA MỚI (CHUẨN 100%) --- */
+        .rocket-container {
             position: fixed;
-            top: -50px; 
+            top: -50px; /* Bắt đầu từ ngoài màn hình */
             z-index: 9999;
+            pointer-events: none; /* Không cản trở click */
+        }
+
+        .falling-rocket {
             font-size: 24px;
             color: #e74c3c;
-            animation: rocketFall linear forwards;
-            pointer-events: none; 
-            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5); /* Thêm viền sáng cho đẹp */
+            /* Animation rơi xuống */
+            animation: fallAnimation linear forwards;
+            display: block;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.6);
+        }
+
+        .exploding-rocket {
+            font-size: 35px; /* Icon nổ to hơn */
+            display: block;
+            /* Animation nổ tung */
+            animation: explodeAnimation 0.5s ease-out forwards;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* Cập nhật: Rơi đến 95vh (sát đáy màn hình) thì dừng lại chuẩn bị nổ */
-        @keyframes rocketFall {
-            0% { transform: translateY(0) rotate(180deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(95vh) rotate(180deg); opacity: 1; }
+        @keyframes fallAnimation {
+            0% { transform: translateY(0) rotate(180deg); }
+            100% { transform: translateY(98vh) rotate(180deg); } /* Rơi sát đáy màn hình */
+        }
+
+        @keyframes explodeAnimation {
+            0% { transform: scale(0.5); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(2.2); opacity: 0; } /* Phóng to và mờ dần đi */
         }
 
         @media (min-width: 768px) {
@@ -435,31 +451,37 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. CẬP NHẬT: Tạo tên lửa có hiệu ứng nổ
+        // 5. Logic tên lửa nổ chuẩn xác 100%
         function createRocket() {
-            const rocket = document.createElement('div');
-            rocket.classList.add('rocket');
-            rocket.innerHTML = '<i class="fas fa-rocket"></i>';
-            rocket.style.left = Math.random() * 95 + 'vw'; // Random vị trí ngang
+            // Tạo thẻ bao bọc tên lửa
+            const rocketWrapper = document.createElement('div');
+            rocketWrapper.className = 'rocket-container';
+            rocketWrapper.style.left = Math.random() * 95 + 'vw'; // Random vị trí ngang
+            
+            // Tạo thẻ icon tên lửa bên trong
+            const rocketIcon = document.createElement('i');
+            rocketIcon.className = 'fas fa-rocket falling-rocket';
             
             // Random tốc độ rơi từ 1.5s đến 3.5s
             const fallDuration = Math.random() * 2 + 1.5; 
-            rocket.style.animationDuration = fallDuration + 's';
-            document.body.appendChild(rocket);
+            rocketIcon.style.animationDuration = fallDuration + 's';
             
-            // Xử lý hiệu ứng nổ (can thiệp ngay trước khi rơi xong)
-            setTimeout(() => {
-                rocket.style.animation = 'none'; // Đứng im
-                rocket.innerHTML = '💥'; // Thay bằng icon nổ
-                rocket.style.transform = 'rotate(0deg) scale(2.5)'; // To ra
-                rocket.style.opacity = '0'; // Mờ dần
-                rocket.style.transition = 'all 0.4s ease-out'; // Mượt mà
-            }, fallDuration * 1000 - 50); 
+            // Lắp ráp
+            rocketWrapper.appendChild(rocketIcon);
+            document.body.appendChild(rocketWrapper);
             
-            // Xóa phần tử để không làm nặng web
-            setTimeout(() => {
-                rocket.remove();
-            }, fallDuration * 1000 + 400); 
+            // LẮNG NGHE SỰ KIỆN: Khi CSS animation chạy xong
+            rocketIcon.addEventListener('animationend', (event) => {
+                if (event.animationName === 'fallAnimation') {
+                    // Khi vừa rơi xong -> Đổi thành vụ nổ
+                    rocketIcon.className = 'exploding-rocket';
+                    rocketIcon.innerHTML = '💥'; // Thay icon tên lửa bằng icon nổ
+                    rocketIcon.style.animationDuration = '0.5s'; // Thời gian nổ 0.5s
+                } else if (event.animationName === 'explodeAnimation') {
+                    // Khi nổ xong -> Xóa vĩnh viễn
+                    rocketWrapper.remove();
+                }
+            });
         }
 
         // Cứ 400ms bắn một quả
