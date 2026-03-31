@@ -113,10 +113,41 @@
         }
 
         h1.name {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
-            color: #2c3e50;
+            color: #fff; /* Chữ màu trắng để bắt sáng */
             margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* Gọi hiệu ứng nhấp nháy */
+            animation: neon-flicker 1.5s infinite alternate;
+        }
+
+        /* Giữ cho dấu tích xanh nguyên vẹn, không bị nháy theo chữ */
+        h1.name .verified { 
+            color: #1da1f2; 
+            font-size: 18px; 
+            vertical-align: middle; 
+            text-shadow: none;
+            animation: none;
+        }
+
+        /* Khung hình keyframes tạo độ chớp tắt (flicker) */
+        @keyframes neon-flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow:
+                    0 0 2px #fff,
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #23cad9,
+                    0 0 30px #23cad9,
+                    0 0 40px #23cad9,
+                    0 0 50px #23cad9;
+            }
+            20%, 24%, 55% {
+                text-shadow: none; /* Tắt hẳn sáng ở các mốc này để tạo cảm giác chớp */
+                color: #2c3e50; /* Trả về màu tối khi đèn tắt */
+            }
         }
         
         .verified { color: #1da1f2; font-size: 18px; vertical-align: middle; }
