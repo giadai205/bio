@@ -123,30 +123,42 @@
             animation: neon-flicker 1.5s infinite alternate;
         }
 
-        /* Giữ cho dấu tích xanh nguyên vẹn, không bị nháy theo chữ */
-        h1.name .verified { 
-            color: #1da1f2; 
-            font-size: 18px; 
-            vertical-align: middle; 
-            text-shadow: none;
-            animation: none;
+       h1.name {
+            font-size: 26px;
+            font-weight: 800;
+            margin-top: 10px;
+            
+            /* Tạo dải màu RGB (Bắt đầu và kết thúc cùng màu đỏ để loop không bị giật) */
+            background: linear-gradient(
+                to right, 
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000
+            );
+            background-size: 200% auto;
+            
+            /* Cắt nền theo viền chữ và làm chữ gốc trong suốt */
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            
+            /* Chạy animation trượt dải màu */
+            animation: rgb-text-flow 3s linear infinite;
         }
 
-        /* Khung hình keyframes tạo độ chớp tắt (flicker) */
-        @keyframes neon-flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow:
-                    0 0 2px #fff,
-                    0 0 5px #fff,
-                    0 0 10px #fff,
-                    0 0 20px #23cad9,
-                    0 0 30px #23cad9,
-                    0 0 40px #23cad9,
-                    0 0 50px #23cad9;
+        /* Giữ cho tích xanh nguyên màu gốc, không bị trong suốt theo chữ */
+        h1.name .verified {
+            -webkit-text-fill-color: #1da1f2; 
+            color: #1da1f2;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+
+        /* Animation kéo dải màu chạy ngang */
+        @keyframes rgb-text-flow {
+            0% {
+                background-position: 0% center;
             }
-            20%, 24%, 55% {
-                text-shadow: none; /* Tắt hẳn sáng ở các mốc này để tạo cảm giác chớp */
-                color: #2c3e50; /* Trả về màu tối khi đèn tắt */
+            100% {
+                background-position: 200% center;
             }
         }
         
