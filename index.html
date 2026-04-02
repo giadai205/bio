@@ -170,39 +170,40 @@
             justify-content: center;
             gap: 15px;
             margin-bottom: 30px;
-            flex-wrap: wrap; /* Tự động xuống dòng nếu thiếu diện tích trên mobile */
+            flex-wrap: wrap; /* Tự động xuống dòng nếu trên điện thoại thiếu chỗ */
         }
         
         .social-links a { 
-            color: #2c3e50; 
+            color: #ffffff; /* Icon luôn có màu trắng để nổi bật trên nền màu */
             font-size: 20px; 
             text-decoration: none; 
             transition: all 0.3s ease; 
             cursor: pointer; 
-            /*--- Phần tạo khung ---*/
+            
+            /*--- Kích thước và khung ---*/
             width: 46px;
             height: 46px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #ffffff;
-            border-radius: 12px; /* Bo tròn góc */
-            border: 1px solid #e2e8f0; /* Viền nhạt */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ tạo chiều sâu */
+            border-radius: 12px; /* Bo góc mượt mà */
+            border: none; /* Bỏ viền vì màu nền đã đậm rồi */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Bóng đổ tạo cảm giác 3D */
         }
 
+        /*--- Gán màu nền CỐ ĐỊNH cho từng mạng xã hội ---*/
+        .social-links a:nth-child(1) { background-color: #1877F2; } /* Facebook */
+        .social-links a:nth-child(2) { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); } /* Instagram */
+        .social-links a:nth-child(3) { background-color: #0068FF; } /* Zalo */
+        .social-links a:nth-child(4) { background-color: #000000; } /* TikTok */
+        .social-links a:nth-child(5) { background-color: #0088cc; } /* Telegram */
+        .social-links a:nth-child(6) { background-color: #07c160; } /* WeChat */
+
+        /*--- Hiệu ứng nảy lên khi ấn/di chuột ---*/
         .social-links a:hover { 
-            transform: translateY(-5px); /* Hiệu ứng nảy lên trên khi di chuột */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
         }
-
-        /* Đổi màu nền theo từng icon khi di chuột vào (Cực kỳ bắt mắt) */
-        .social-links a:nth-child(1):hover { background-color: #1877F2; color: #fff; border-color: #1877F2; } /* Facebook */
-        .social-links a:nth-child(2):hover { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: #fff; border-color: transparent; } /* Instagram */
-        .social-links a:nth-child(3):hover { background-color: #0068FF; color: #fff; border-color: #0068FF; } /* Zalo */
-        .social-links a:nth-child(4):hover { background-color: #000000; color: #fff; border-color: #000000; } /* TikTok */
-        .social-links a:nth-child(5):hover { background-color: #0088cc; color: #fff; border-color: #0088cc; } /* Telegram */
-        .social-links a:nth-child(6):hover { background-color: #07c160; color: #fff; border-color: #07c160; } /* WeChat */
 
         .info-list {
             text-align: left;
@@ -375,7 +376,7 @@
 
                 <div class="social-links">
                     <a href="https://www.facebook.com/iamgiadai" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="https://www.instagram.com/_iamgiadai/"><i class="fab fa-instagram"></i></a>
                     <a href="https://zalo.me/0942129369" title="Zalo"><i class="fas fa-comment-dots"></i></a>
                     <a href="https://www.tiktok.com/@iamgiadai" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
