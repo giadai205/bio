@@ -165,15 +165,44 @@
         .verified { color: #1da1f2; font-size: 18px; vertical-align: middle; }
         p.alias { font-size: 14px; color: #7f8c8d; font-weight: 700; margin-bottom: 20px; }
 
-        .social-links {
+       .social-links {
             display: flex;
             justify-content: center;
-            gap: 18px;
+            gap: 15px;
             margin-bottom: 30px;
+            flex-wrap: wrap; /* Tự động xuống dòng nếu thiếu diện tích trên mobile */
         }
         
-        .social-links a { color: #2c3e50; font-size: 22px; text-decoration: none; transition: 0.2s; cursor: pointer; }
-        .social-links a:hover { transform: scale(1.1); color: #aab6fe; }
+        .social-links a { 
+            color: #2c3e50; 
+            font-size: 20px; 
+            text-decoration: none; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            /*--- Phần tạo khung ---*/
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 12px; /* Bo tròn góc */
+            border: 1px solid #e2e8f0; /* Viền nhạt */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ tạo chiều sâu */
+        }
+
+        .social-links a:hover { 
+            transform: translateY(-5px); /* Hiệu ứng nảy lên trên khi di chuột */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Đổi màu nền theo từng icon khi di chuột vào (Cực kỳ bắt mắt) */
+        .social-links a:nth-child(1):hover { background-color: #1877F2; color: #fff; border-color: #1877F2; } /* Facebook */
+        .social-links a:nth-child(2):hover { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: #fff; border-color: transparent; } /* Instagram */
+        .social-links a:nth-child(3):hover { background-color: #0068FF; color: #fff; border-color: #0068FF; } /* Zalo */
+        .social-links a:nth-child(4):hover { background-color: #000000; color: #fff; border-color: #000000; } /* TikTok */
+        .social-links a:nth-child(5):hover { background-color: #0088cc; color: #fff; border-color: #0088cc; } /* Telegram */
+        .social-links a:nth-child(6):hover { background-color: #07c160; color: #fff; border-color: #07c160; } /* WeChat */
 
         .info-list {
             text-align: left;
