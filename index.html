@@ -307,7 +307,7 @@
             width: 100vw;
             height: 100vh;
             z-index: 9999;
-            pointer-events: none; /* Tránh cản trở việc click vào các nút ở dưới */
+            pointer-events: none; 
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -478,10 +478,13 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. Logic pháo hoa (BẢN CANVAS - SIÊU CHÂN THỰC, CÓBloom, CÓ TRAIL LẤP LÁNH)
+        // 5. Logic pháo hoa (FIX LAG + NỔ 1 QUẢ NHIỀU MÀU)
         const canvas = document.getElementById('fireworksCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false }); // Tối ưu phần cứng
         
+        // Đảm bảo nền canvas trong suốt nhưng dùng kỹ thuật blend để mượt
+        canvas.style.backgroundColor = 'transparent';
+
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -490,48 +493,44 @@
         resizeCanvas();
 
         let particles = [];
-        // Sử dụng không gian màu HSL để dễ dàng điều chỉnh độ sáng và độ rực rỡ
-        const baseHue = Math.random() * 360; // Màu cơ sở ngẫu nhiên cho mỗi lần load
+        
+        // Bảng màu rực rỡ để bốc ngẫu nhiên (Đỏ, Xanh lá, Xanh dương, Vàng, Hồng, Cyan)
+        const vividHues = [0, 60, 120, 180, 240, 300];
 
         class Particle {
-            constructor(x, y, isShell, hue) {
+            constructor(x, y, isShell) {
                 this.x = x;
                 this.y = y;
-                // Lưu lại vị trí cũ để vẽ "đuôi" (trail)
                 this.oldX = x;
                 this.oldY = y;
                 this.isShell = isShell;
                 
                 if (isShell) {
-                    // Quả pháo bắn lên (tia lửa mồi màu vàng cam)
-                    this.hue = 30 + (Math.random() - 0.5) * 10; 
-                    this.brightness = Math.random() * 20 + 70;
+                    this.hue = 30; // Quả pháo bay lên màu cam
+                    this.brightness = 70;
                     this.vx = (Math.random() - 0.5) * 1.5; 
                     this.vy = -(Math.random() * 3 + canvas.height * 0.016);
-                    this.life = Math.random() * 15 + 35; // Thời gian bay lên trước khi nổ
-                    this.size = 2;
-                    this.gravity = 0.05; // Trọng lực nhẹ khi bay lên
+                    this.life = Math.random() * 15 + 35; 
+                    this.size = 2.5;
+                    this.gravity = 0.05; 
                 } else {
-                    // Khi nổ: Tia lửa văng ra
-                    // Đa sắc màu: Lấy màu cơ sở của quả pháo +/- một khoảng ngẫu nhiên
-                    this.hue = hue + (Math.random() - 0.5) * 40; 
-                    this.brightness = Math.random() * 30 + 60; // Độ sáng cao
+                    // FIX MÀU: Khi nổ, mỗi hạt được bốc 1 màu HSL hoàn toàn khác nhau
+                    this.hue = vividHues[Math.floor(Math.random() * vividHues.length)] + (Math.random() * 20 - 10); 
+                    this.brightness = Math.random() * 20 + 60; 
                     const angle = Math.random() * Math.PI * 2;
-                    // Lực văng mạnh ban đầu, ngẫu nhiên để tạo hình dạng nổ tự nhiên
-                    const speed = Math.random() * 15 + 3; 
+                    const speed = Math.random() * 14 + 2; // Văng mạnh
                     this.vx = Math.cos(angle) * speed;
                     this.vy = Math.sin(angle) * speed;
-                    this.life = Math.random() * 60 + 80; // Sống lâu để rủ xuống
-                    this.size = Math.random() * 1.5 + 1;
-                    this.friction = 0.95; // Sức cản không khí ban đầu
-                    this.gravity = 0.18;  // Trọng lực kéo hạt rơi xuống tạo đuôi nón
+                    this.life = Math.random() * 60 + 80; 
+                    this.size = Math.random() * 1.5 + 1.2;
+                    this.friction = 0.94; 
+                    this.gravity = 0.15;  
                 }
                 this.alpha = 1;
-                this.decay = Math.random() * 0.015 + 0.015; // Tốc độ mờ dần ngẫu nhiên
+                this.decay = Math.random() * 0.015 + 0.015; 
             }
 
             update() {
-                // Lưu vị trí hiện tại thành vị trí cũ trước khi cập nhật
                 this.oldX = this.x;
                 this.oldY = this.y;
 
@@ -539,69 +538,46 @@
                     this.vx *= this.friction;
                     this.vy *= this.friction;
                     this.vy += this.gravity;
-                    
-                    // Giảm dần sức cản khi hạt rơi xuống
-                    if(this.friction > 0.9) this.friction -= 0.001; 
                 } else {
-                    this.vy += this.gravity; // Trọng lực khi bay lên
+                    this.vy += this.gravity; 
                 }
 
                 this.x += this.vx;
                 this.y += this.vy;
                 
-                // Mờ dần đi
                 this.alpha -= this.decay;
                 
-                // Tia lửa nhỏ dần và tối dần khi sắp chết
                 if (this.alpha < 0.5 && !this.isShell) {
                     this.size *= 0.98;
-                    this.brightness *= 0.99;
                 }
             }
 
             draw() {
                 ctx.globalAlpha = this.alpha;
-                // Chế độ vẽ LIGHTER: Khi các hạt chồng lên nhau, màu sẽ sáng rực lên (tạo BLOOM)
                 ctx.globalCompositeOperation = 'lighter';
                 
-                ctx.fillStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
-                
-                // Vẽ tia lửa (Spark) chân thực: Một đoạn thẳng nhỏ nối vị trí cũ và mới tạo TRAIL
+                // Vẽ tia lửa dạng đường thẳng, BỎ shadowBlur để máy yếu không bị lag
                 ctx.beginPath();
                 ctx.moveTo(this.oldX, this.oldY);
                 ctx.lineTo(this.x, this.y);
                 ctx.lineWidth = this.size;
                 ctx.strokeStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
-                
-                // Thêm quầng sáng xung quanh mỗi tia lửa (shadow blur)
-                ctx.shadowBlur = this.size * 3;
-                ctx.shadowColor = `hsl(${this.hue}, 100%, 50%)`;
-                
                 ctx.stroke();
-                
-                // Reset quầng sáng để không ảnh hưởng đến các hạt khác
-                ctx.shadowBlur = 0;
             }
         }
 
         function fire() {
-            // Màu cơ sở cho vụ nổ này
-            const hue = Math.random() * 360;
-            // Bắn từ dưới cùng, ngẫu nhiên ở 60% khu vực giữa màn hình
             const startX = canvas.width * 0.2 + Math.random() * (canvas.width * 0.6);
-            particles.push(new Particle(startX, canvas.height, true, hue));
+            particles.push(new Particle(startX, canvas.height, true));
         }
 
         function animateFireworks() {
             requestAnimationFrame(animateFireworks);
             
-            // Xóa canvas một chút để tạo hiệu ứng "đuôi" mờ mờ toàn màn hình
             ctx.globalCompositeOperation = 'destination-out';
-            // Tăng độ mờ của nền để "đuôi" biến mất nhanh hơn một chút, nhìn chân thực hơn
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Đặt lại chế độ vẽ bình thường
             ctx.globalCompositeOperation = 'source-over';
 
             for (let i = particles.length - 1; i >= 0; i--) {
@@ -609,13 +585,12 @@
                 p.update();
                 p.draw();
 
-                // Khi hạt chết
                 if (p.alpha <= 0 || p.size < 0.1) {
                     if (p.isShell) {
-                        // Vỏ pháo nổ tạo ra 180-220 hạt đa sắc bung xoè cực mạnh, chân thực
-                        const count = 180 + Math.random() * 40;
+                        // Số lượng hạt tầm 130 để vừa lấp đầy màn hình vừa không bị lag
+                        const count = 120 + Math.random() * 30;
                         for (let j = 0; j < count; j++) {
-                            particles.push(new Particle(p.x, p.y, false, p.hue));
+                            particles.push(new Particle(p.x, p.y, false));
                         }
                     }
                     particles.splice(i, 1);
@@ -623,8 +598,8 @@
             }
         }
 
-        // Bắn 1 quả mỗi 1.8 giây để không bị lag và màn hình luôn rực rỡ
-        setInterval(fire, 1800);
+        // Bắn 1 quả mỗi 1.5 giây
+        setInterval(fire, 1500);
         animateFireworks();
     </script>
 </body>
