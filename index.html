@@ -20,6 +20,7 @@
             color: #333;
             line-height: 1.6;
             overflow-x: hidden; 
+            overflow-y: auto;
         }
 
         .background-banner {
@@ -117,19 +118,14 @@
             font-weight: 800;
             margin-top: 10px;
             
-            /* Tạo dải màu RGB (Bắt đầu và kết thúc cùng màu đỏ để loop không bị giật) */
             background: linear-gradient(
                 to right, 
                 #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000
             );
             background-size: 200% auto;
-            
-            /* Cắt nền theo viền chữ và làm chữ gốc trong suốt */
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-            
-            /* Chạy animation trượt dải màu */
             animation: rgb-text-flow 3s linear infinite;
         }
 
@@ -162,7 +158,6 @@
             text-decoration: none; 
             transition: all 0.3s ease; 
             cursor: pointer; 
-            
             width: 46px;
             height: 46px;
             display: flex;
@@ -173,12 +168,12 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
         }
 
-        .social-links a:nth-child(1) { background-color: #1877F2; } /* Facebook */
-        .social-links a:nth-child(2) { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); } /* Instagram */
-        .social-links a:nth-child(3) { background-color: #0068FF; } /* Zalo */
-        .social-links a:nth-child(4) { background-color: #000000; } /* TikTok */
-        .social-links a:nth-child(5) { background-color: #0088cc; } /* Telegram */
-        .social-links a:nth-child(6) { background-color: #07c160; } /* WeChat */
+        .social-links a:nth-child(1) { background-color: #1877F2; } 
+        .social-links a:nth-child(2) { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); } 
+        .social-links a:nth-child(3) { background-color: #0068FF; } 
+        .social-links a:nth-child(4) { background-color: #000000; } 
+        .social-links a:nth-child(5) { background-color: #0088cc; } 
+        .social-links a:nth-child(6) { background-color: #07c160; } 
 
         .social-links a:hover { 
             transform: translateY(-5px) scale(1.05); 
@@ -308,17 +303,18 @@
         /* --- PHÁO HOA --- */
         .firework-shell {
             position: fixed;
-            width: 4px;
-            height: 15px;
+            width: 5px;
+            height: 20px;
             border-radius: 50%;
             z-index: 9999;
             pointer-events: none;
+            box-shadow: 0 0 10px #fff;
         }
 
         .firework-spark {
             position: fixed;
-            width: 5px;
-            height: 5px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             z-index: 9999;
             pointer-events: none;
@@ -490,72 +486,78 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. Logic pháo hoa nổ (BẢN XOÈ TO VÀ RỰC RỠ)
-        const colors = ['#ff0043', '#14fc56', '#1e7fff', '#e60aff', '#ffae00', '#00ffff'];
+        // 5. Logic pháo hoa (BẢN SIÊU TO - ĐA SẮC MÀU - TOÀN MÀN HÌNH)
+        const colors = ['#ff0043', '#14fc56', '#1e7fff', '#e60aff', '#ffae00', '#00ffff', '#ffffff'];
 
         function createFirework() {
+            // Điểm bắt đầu bắn: ngẫu nhiên chiều ngang, ở dưới cùng màn hình
             const startX = Math.random() * window.innerWidth;
             const startY = window.innerHeight;
-            // Cho pháo hoa nổ cao hơn một chút để có không gian xoè to
-            const targetY = window.innerHeight * (Math.random() * 0.3 + 0.1); 
             
-            const color = colors[Math.floor(Math.random() * colors.length)];
-
-            // Tạo vỏ pháo bắn lên
+            // Nổ ở khoảng giữa màn hình để xoè đều ra mọi hướng
+            const targetY = window.innerHeight * (Math.random() * 0.2 + 0.3); 
+            
+            // Tạo vỏ pháo bắn lên (màu cam nhạt để giống tia lửa bắn lên)
             const shell = document.createElement('div');
             shell.className = 'firework-shell';
             shell.style.left = startX + 'px';
             shell.style.top = startY + 'px';
-            shell.style.backgroundColor = color;
-            shell.style.boxShadow = `0 0 8px ${color}`;
+            shell.style.backgroundColor = '#ffcc00'; 
             document.body.appendChild(shell);
 
-            // Hoạt ảnh bắn pháo hoa lên
+            // Hoạt ảnh bắn lên
             const shootAnim = shell.animate([
-                { transform: `translateY(0)` },
-                { transform: `translateY(${targetY - startY}px)` }
+                { transform: `translateY(0) scaleY(1)` },
+                { transform: `translateY(${targetY - startY}px) scaleY(0.5)` }
             ], {
-                duration: Math.random() * 400 + 700, 
+                duration: 800, 
                 easing: 'ease-out',
                 fill: 'forwards'
             });
 
             shootAnim.onfinish = () => {
                 shell.remove(); 
-                createExplosion(startX, targetY, color); 
+                createMassiveExplosion(startX, targetY); 
             };
         }
 
-        function createExplosion(x, y, color) {
-            const sparkCount = 80; // Tăng số lượng hạt lên nhiều để không bị thưa
+        function createMassiveExplosion(x, y) {
+            const sparkCount = 250; // Số lượng siêu khủng để lấp đầy màn hình
+            // Bán kính bao trùm gần hết bề ngang/dọc của màn hình
+            const maxScreenSize = Math.max(window.innerWidth, window.innerHeight);
+            const maxDistance = maxScreenSize * 0.6; 
             
             for (let i = 0; i < sparkCount; i++) {
                 const spark = document.createElement('div');
                 spark.className = 'firework-spark';
                 spark.style.left = x + 'px';
                 spark.style.top = y + 'px';
-                spark.style.backgroundColor = color;
-                // Làm cho hạt sáng hơn, toả viền rộng hơn
-                spark.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                
+                // Trộn màu: Mỗi hạt được bốc random 1 màu trong mảng
+                const sparkColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.backgroundColor = sparkColor;
+                spark.style.boxShadow = `0 0 12px ${sparkColor}, 0 0 24px ${sparkColor}`;
+                
                 document.body.appendChild(spark);
 
-                // Tính toán hướng bay ngẫu nhiên theo hình tròn
+                // Bay mọi hướng 360 độ
                 const angle = Math.random() * Math.PI * 2;
-                
-                // TĂNG MẠNH BÁN KÍNH VỤ NỔ (từ 100px lên tối đa tới 350px)
-                const distance = Math.random() * 250 + 100; 
+                // Hạt văng gần, hạt văng xa
+                const distance = Math.random() * maxDistance + 50; 
 
                 const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance + 120; // Rơi xuống sâu hơn tạo đuôi pháo hoa dài
+                // Cộng thêm distance * 0.4 để tạo trọng lực rơi xuống rủ thành hình nón
+                const ty = Math.sin(angle) * distance + (distance * 0.5); 
 
-                // Hoạt ảnh các hạt bay ra và mờ dần
+                // Thời gian bay lâu hơn để toả khắp màn
+                const flightTime = Math.random() * 1500 + 1500; 
+
                 const explodeAnim = spark.animate([
-                    { transform: `translate(0, 0) scale(1.5)`, opacity: 1 },
+                    { transform: `translate(0, 0) scale(2.5)`, opacity: 1 },
                     { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
                 ], {
-                    // Kéo dài thời gian nổ để pháo hoa bay được xa hơn
-                    duration: Math.random() * 800 + 800, 
-                    easing: 'cubic-bezier(0.25, 1, 0.5, 1)', 
+                    duration: flightTime, 
+                    easing: 'cubic-bezier(0.15, 0.85, 0.35, 1)', 
                     fill: 'forwards'
                 });
 
@@ -563,8 +565,8 @@
             }
         }
 
-        // Cứ mỗi 1000ms (1 giây) bắn một quả để tránh lag khi nổ quá to
-        setInterval(createFirework, 1000); 
+        // Bắn mỗi 1.8 giây 1 quả để màn hình luôn rực rỡ nhưng không bị giật lag
+        setInterval(createFirework, 1800); 
     </script>
 </body>
 </html>
