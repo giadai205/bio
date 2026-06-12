@@ -478,13 +478,10 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. Logic pháo hoa (FIX LAG + NỔ 1 QUẢ NHIỀU MÀU)
+        // 5. Logic pháo hoa (FIX BUG NỀN ĐEN + NỔ 1 QUẢ NHIỀU MÀU)
         const canvas = document.getElementById('fireworksCanvas');
-        const ctx = canvas.getContext('2d', { alpha: false }); // Tối ưu phần cứng
+        const ctx = canvas.getContext('2d'); // Đã xóa phần alpha: false gây nền đen
         
-        // Đảm bảo nền canvas trong suốt nhưng dùng kỹ thuật blend để mượt
-        canvas.style.backgroundColor = 'transparent';
-
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -554,9 +551,9 @@
 
             draw() {
                 ctx.globalAlpha = this.alpha;
-                ctx.globalCompositeOperation = 'lighter';
+                ctx.globalCompositeOperation = 'lighter'; // Tạo độ sáng bloom cho pháo hoa
                 
-                // Vẽ tia lửa dạng đường thẳng, BỎ shadowBlur để máy yếu không bị lag
+                // Vẽ tia lửa
                 ctx.beginPath();
                 ctx.moveTo(this.oldX, this.oldY);
                 ctx.lineTo(this.x, this.y);
@@ -574,6 +571,7 @@
         function animateFireworks() {
             requestAnimationFrame(animateFireworks);
             
+            // Xoá pháo hoa cũ bằng cách phủ nền đen trong suốt để tạo hiệu ứng đuôi
             ctx.globalCompositeOperation = 'destination-out';
             ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -587,8 +585,7 @@
 
                 if (p.alpha <= 0 || p.size < 0.1) {
                     if (p.isShell) {
-                        // Số lượng hạt tầm 130 để vừa lấp đầy màn hình vừa không bị lag
-                        const count = 120 + Math.random() * 30;
+                        const count = 120 + Math.random() * 30; // Số lượng hạt bung ra
                         for (let j = 0; j < count; j++) {
                             particles.push(new Particle(p.x, p.y, false));
                         }
@@ -599,7 +596,7 @@
         }
 
         // Bắn 1 quả mỗi 1.5 giây
-        setInterval(fire, 1500);
+        setInterval(fire, 2000);
         animateFireworks();
     </script>
 </body>
