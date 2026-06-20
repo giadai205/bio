@@ -1,3 +1,10 @@
+Chào bạn, để chuyển đổi hiệu ứng từ pháo hoa sang **tuyết rơi dày đặc**, mình đã thay đổi logic của thẻ `<canvas>` ở cuối file JavaScript.
+
+Mình đã giữ nguyên toàn bộ giao diện, tính năng (hiện/ẩn số điện thoại, nhạc nền, mã FPS, modal QR) và chỉ thay thế đoạn code vẽ pháo hoa thành thuật toán vẽ các hạt tuyết rơi với số lượng lớn (khoảng 400 hạt) lướt nhẹ theo chiều gió. Để tuyết nổi bật trên cả nền sáng và tối, mình đã thêm một chút đổ bóng (shadow) nhẹ cho các hạt tuyết.
+
+Dưới đây là toàn bộ mã nguồn HTML đã được cập nhật:
+
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -299,8 +306,8 @@
             margin: 0 auto;
         }
 
-        /* Khung hiển thị pháo hoa */
-        #fireworksCanvas {
+        /* Khung hiển thị canvas */
+        #snowCanvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -402,7 +409,7 @@
         </div>
     </div>
 
-    <canvas id="fireworksCanvas"></canvas>
+    <canvas id="snowCanvas"></canvas>
 
     <audio id="bg-music" loop>
         <source src="nhac2.mp3" type="audio/mpeg">
@@ -478,127 +485,83 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. Logic pháo hoa (BẢN XOÈ TẬN MÉP MÀN HÌNH - KHÔNG LAG)
-        const canvas = document.getElementById('fireworksCanvas');
+        // 5. Logic Tuyết Rơi (Dày đặc)
+        const canvas = document.getElementById('snowCanvas');
         const ctx = canvas.getContext('2d');
         
+        let width, height;
+
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let particles = [];
-        const vividHues = [0, 60, 120, 180, 240, 300];
+        const maxFlakes = 400; // Số lượng hạt tuyết (dày đặc)
+        const flakes = [];
 
-        class Particle {
-            constructor(x, y, isShell) {
-                this.x = x;
-                this.y = y;
-                this.oldX = x;
-                this.oldY = y;
-                this.isShell = isShell;
-                
-                if (isShell) {
-                    this.hue = 30; 
-                    this.brightness = 70;
-                    this.vx = (Math.random() - 0.5) * 2; 
-                    // Bắn cao hơn để nổ ở khu vực tâm màn hình (cho dễ bung đều 4 góc)
-                    this.vy = -(Math.random() * 2 + canvas.height * 0.022); 
-                    this.life = Math.random() * 10 + 35; 
-                    this.size = 3;
-                    this.gravity = 0.05; 
-                } else {
-                    this.hue = vividHues[Math.floor(Math.random() * vividHues.length)] + (Math.random() * 20 - 10); 
-                    this.brightness = Math.random() * 20 + 60; 
-                    const angle = Math.random() * Math.PI * 2;
-                    
-                    // TĂNG LỰC VĂNG LÊN CỰC MẠNH (bao trọn màn hình)
-                    const speed = Math.random() * 35 + 5; 
-                    this.vx = Math.cos(angle) * speed;
-                    this.vy = Math.sin(angle) * speed;
-                    
-                    this.life = Math.random() * 80 + 100; // Sống rất lâu
-                    this.size = Math.random() * 2 + 1.2;
-                    this.friction = 0.96; // Giữ lực lâu hơn để văng xa tận viền
-                    this.gravity = 0.15;  
-                }
-                this.alpha = 1;
-                this.decay = Math.random() * 0.008 + 0.008; // Mờ chậm hơn
-            }
-
-            update() {
-                this.oldX = this.x;
-                this.oldY = this.y;
-
-                if (!this.isShell) {
-                    this.vx *= this.friction;
-                    this.vy *= this.friction;
-                    this.vy += this.gravity;
-                } else {
-                    this.vy += this.gravity; 
-                }
-
-                this.x += this.vx;
-                this.y += this.vy;
-                
-                this.alpha -= this.decay;
-                
-                if (this.alpha < 0.5 && !this.isShell) {
-                    this.size *= 0.98;
-                }
-            }
-
-            draw() {
-                ctx.globalAlpha = this.alpha;
-                ctx.globalCompositeOperation = 'lighter'; 
-                
-                ctx.beginPath();
-                ctx.moveTo(this.oldX, this.oldY);
-                ctx.lineTo(this.x, this.y);
-                ctx.lineWidth = this.size;
-                ctx.strokeStyle = `hsl(${this.hue}, 100%, ${this.brightness}%)`;
-                ctx.stroke();
-            }
+        // Khởi tạo các hạt tuyết ban đầu
+        for (let i = 0; i < maxFlakes; i++) {
+            flakes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 3 + 1, // Kích thước ngẫu nhiên từ 1px đến 4px
+                d: Math.random() * maxFlakes // Mật độ để tính toán độ lướt
+            });
         }
 
-        function fire() {
-            // Bắn lên từ khoảng giữa đáy màn hình
-            const startX = canvas.width * 0.3 + Math.random() * (canvas.width * 0.4);
-            particles.push(new Particle(startX, canvas.height, true));
+        let angle = 0;
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, width, height); // Xoá khung hình cũ
+            ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; // Màu trắng của tuyết
+            
+            // Thêm bóng mờ nhẹ để tuyết vẫn nổi bật trên nền trắng/sáng của website
+            ctx.shadowBlur = 3;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+
+            ctx.beginPath();
+            for (let i = 0; i < maxFlakes; i++) {
+                let f = flakes[i];
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+            }
+            ctx.fill();
+            
+            updateSnow();
+            requestAnimationFrame(drawSnow);
         }
 
-        function animateFireworks() {
-            requestAnimationFrame(animateFireworks);
-            
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.globalCompositeOperation = 'source-over';
+        function updateSnow() {
+            angle += 0.01;
+            for (let i = 0; i < maxFlakes; i++) {
+                let f = flakes[i];
+                
+                // Cập nhật toạ độ x, y (rơi xuống và hơi nghiêng qua lại)
+                f.y += Math.cos(angle + f.d) + 1 + f.r / 2;
+                f.x += Math.sin(angle) * 2;
 
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.update();
-                p.draw();
-
-                if (p.alpha <= 0 || p.size < 0.1) {
-                    if (p.isShell) {
-                        // Tăng số lượng hạt để nổ to không bị rỗng ở giữa
-                        const count = 250 + Math.random() * 100; 
-                        for (let j = 0; j < count; j++) {
-                            particles.push(new Particle(p.x, p.y, false));
+                // Nếu tuyết rơi khỏi màn hình thì đưa trở lại phía trên
+                if (f.x > width + 5 || f.x < -5 || f.y > height) {
+                    if (i % 3 > 0) { // 66.67% tuyết rơi lại từ đầu màn hình
+                        flakes[i] = { x: Math.random() * width, y: -10, r: f.r, d: f.d };
+                    } else {
+                        // Những hạt tuyết đi theo chiều gió tạt ngang màn hình
+                        if (Math.sin(angle) > 0) {
+                            flakes[i] = { x: -5, y: Math.random() * height, r: f.r, d: f.d }; // Vào từ bên trái
+                        } else {
+                            flakes[i] = { x: width + 5, y: Math.random() * height, r: f.r, d: f.d }; // Vào từ bên phải
                         }
                     }
-                    particles.splice(i, 1);
                 }
             }
         }
 
-        // Bắn 1 quả mỗi 1.8 giây (thời gian đủ để quả trước bung kín màn hình)
-        setInterval(fire, 1800);
-        animateFireworks();
+        // Bắt đầu hiệu ứng tuyết rơi
+        drawSnow();
     </script>
 </body>
 </html>
+
+```
