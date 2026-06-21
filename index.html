@@ -478,7 +478,7 @@
             if (event.target == modal) { closeModal(); }
         }
 
-        // 5. Logic Tuyết Rơi (Dày đặc)
+        // 5. Logic Tuyết Rơi Hình ❄️
         const canvas = document.getElementById('snowCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -491,7 +491,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const maxFlakes = 400; // Số lượng hạt tuyết (dày đặc)
+        const maxFlakes = 150; // Giảm xuống 150 để giữ FPS cao vì in chữ nặng hơn vẽ khối
         const flakes = [];
 
         // Khởi tạo các hạt tuyết ban đầu
@@ -499,8 +499,8 @@
             flakes.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                r: Math.random() * 3 + 1, // Kích thước ngẫu nhiên từ 1px đến 4px
-                d: Math.random() * maxFlakes // Mật độ để tính toán độ lướt
+                r: Math.random() * 14 + 10, // Font size của tuyết (10px - 24px)
+                d: Math.random() * maxFlakes 
             });
         }
 
@@ -508,19 +508,20 @@
 
         function drawSnow() {
             ctx.clearRect(0, 0, width, height); // Xoá khung hình cũ
-            ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; // Màu trắng của tuyết
+            ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; // Màu trắng
             
-            // Thêm bóng mờ nhẹ để tuyết vẫn nổi bật trên nền trắng/sáng của website
-            ctx.shadowBlur = 3;
-            ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+            // Đổ bóng mờ
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+            
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
 
-            ctx.beginPath();
             for (let i = 0; i < maxFlakes; i++) {
                 let f = flakes[i];
-                ctx.moveTo(f.x, f.y);
-                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                ctx.font = f.r + "px Arial";
+                ctx.fillText("❄", f.x, f.y); // Vẽ ký tự bông tuyết
             }
-            ctx.fill();
             
             updateSnow();
             requestAnimationFrame(drawSnow);
@@ -531,20 +532,19 @@
             for (let i = 0; i < maxFlakes; i++) {
                 let f = flakes[i];
                 
-                // Cập nhật toạ độ x, y (rơi xuống và hơi nghiêng qua lại)
-                f.y += Math.cos(angle + f.d) + 1 + f.r / 2;
+                // Cập nhật toạ độ rơi xuống
+                f.y += Math.cos(angle + f.d) + 1 + f.r / 10; // Rơi theo kích thước
                 f.x += Math.sin(angle) * 2;
 
-                // Nếu tuyết rơi khỏi màn hình thì đưa trở lại phía trên
-                if (f.x > width + 5 || f.x < -5 || f.y > height) {
-                    if (i % 3 > 0) { // 66.67% tuyết rơi lại từ đầu màn hình
-                        flakes[i] = { x: Math.random() * width, y: -10, r: f.r, d: f.d };
+                // Nếu tuyết rơi khỏi màn hình
+                if (f.x > width + 15 || f.x < -15 || f.y > height + 15) {
+                    if (i % 3 > 0) { 
+                        flakes[i] = { x: Math.random() * width, y: -20, r: f.r, d: f.d };
                     } else {
-                        // Những hạt tuyết đi theo chiều gió tạt ngang màn hình
                         if (Math.sin(angle) > 0) {
-                            flakes[i] = { x: -5, y: Math.random() * height, r: f.r, d: f.d }; // Vào từ bên trái
+                            flakes[i] = { x: -15, y: Math.random() * height, r: f.r, d: f.d };
                         } else {
-                            flakes[i] = { x: width + 5, y: Math.random() * height, r: f.r, d: f.d }; // Vào từ bên phải
+                            flakes[i] = { x: width + 15, y: Math.random() * height, r: f.r, d: f.d }; 
                         }
                     }
                 }
