@@ -168,9 +168,7 @@
         }
 
         .social-links a:nth-child(1) { background-color: #1877F2; } 
-        .social-links a:nth-child(2) { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); } 
-        .social-links a:nth-child(3) { background-color: #0068FF; } 
-        .social-links a:nth-child(4) { background-color: #000000; } 
+        /* Các nút ảnh sẽ được đè thuộc tính style trực tiếp bên dưới HTML để xóa màu nền mặc định */
         .social-links a:nth-child(5) { background-color: #0088cc; } 
         .social-links a:nth-child(6) { background-color: #07c160; } 
 
@@ -345,17 +343,28 @@
                 <h1 class="name">Trần Gia Đại <i class="fas fa-check-circle verified"></i></h1>
                 <p class="alias">Kệ mẹ nhau mà sống</p>
                 <div class="social-links">
+                    <!-- Facebook -->
                     <a href="https://www.facebook.com/iamgiadai" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                    <!-- Instagram (Link Wikimedia đã sửa) -->
                     <a href="https://www.instagram.com/_iamgiadai/" title="Instagram" style="background: transparent; box-shadow: none;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2022.svg" alt="Instagram" style="width: 46px; height: 46px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
-</a>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2022.svg" alt="Instagram" style="width: 46px; height: 46px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
+                    </a>
+
+                    <!-- Zalo (Link Wikimedia) -->
                     <a href="https://zalo.me/0942129369" title="Zalo" style="background: transparent; box-shadow: none;">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" style="width: 46px; height: 46px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
                     </a>
+
+                    <!-- TikTok (Link Wikimedia - Đã lót nền trắng) -->
                     <a href="https://www.tiktok.com/@iamusername205" title="TikTok" style="background: transparent; box-shadow: none;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Ionicons_logo-tiktok.svg" alt="TikTok" style="width: 46px; height: 46px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); background-color: #000000; padding: 8px;">
-</a>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Ionicons_logo-tiktok.svg" alt="TikTok" style="width: 46px; height: 46px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); background-color: #ffffff; padding: 6px;">
+                    </a>
+
+                    <!-- Telegram -->
                     <a href="https://t.me/Trangiadai" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    
+                    <!-- WeChat -->
                     <a onclick="showQR('wechat.jpg', 'Quét mã WeChat')" title="WeChat"><i class="fab fa-weixin"></i></a>
                 </div>
             </div>
@@ -494,15 +503,14 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const maxFlakes = 150; // Giảm xuống 150 để giữ FPS cao vì in chữ nặng hơn vẽ khối
+        const maxFlakes = 150; 
         const flakes = [];
 
-        // Khởi tạo các hạt tuyết ban đầu
         for (let i = 0; i < maxFlakes; i++) {
             flakes.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                r: Math.random() * 14 + 10, // Font size của tuyết (10px - 24px)
+                r: Math.random() * 14 + 10, 
                 d: Math.random() * maxFlakes 
             });
         }
@@ -510,10 +518,9 @@
         let angle = 0;
 
         function drawSnow() {
-            ctx.clearRect(0, 0, width, height); // Xoá khung hình cũ
-            ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; // Màu trắng
+            ctx.clearRect(0, 0, width, height); 
+            ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; 
             
-            // Đổ bóng mờ
             ctx.shadowBlur = 4;
             ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
             
@@ -523,7 +530,7 @@
             for (let i = 0; i < maxFlakes; i++) {
                 let f = flakes[i];
                 ctx.font = f.r + "px Arial";
-                ctx.fillText("❄", f.x, f.y); // Vẽ ký tự bông tuyết
+                ctx.fillText("❄", f.x, f.y); 
             }
             
             updateSnow();
@@ -535,11 +542,9 @@
             for (let i = 0; i < maxFlakes; i++) {
                 let f = flakes[i];
                 
-                // Cập nhật toạ độ rơi xuống
-                f.y += Math.cos(angle + f.d) + 1 + f.r / 10; // Rơi theo kích thước
+                f.y += Math.cos(angle + f.d) + 1 + f.r / 10; 
                 f.x += Math.sin(angle) * 2;
 
-                // Nếu tuyết rơi khỏi màn hình
                 if (f.x > width + 15 || f.x < -15 || f.y > height + 15) {
                     if (i % 3 > 0) { 
                         flakes[i] = { x: Math.random() * width, y: -20, r: f.r, d: f.d };
@@ -554,7 +559,6 @@
             }
         }
 
-        // Bắt đầu hiệu ứng tuyết rơi
         drawSnow();
     </script>
 </body>
